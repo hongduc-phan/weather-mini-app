@@ -1,13 +1,17 @@
 import merge from "lodash/merge";
 import { put, call } from "redux-saga/effects";
 
+// import Router from "next/router";
+
 import URL from "src/constants/url";
 import ENV from "src/constants/env";
 
 import AuthStorage from "src/utils/AuthStorage";
 import { REQUEST_ERROR } from "src/redux/actions/type";
 
-const { API_URL } = URL;
+// const { API_URL } = URL;
+
+const API_URL = "http://api.openweathermap.org/data/2.5";
 
 const fetching = (url, options) =>
   fetch(API_URL + url, options)
@@ -48,8 +52,8 @@ export default function*({
   const defaultOptions = {
     method: "GET",
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
+      // Accept: "application/json",
+      // "Content-Type": "application/json"
     }
   };
 
@@ -121,6 +125,7 @@ export default function*({
             type: REQUEST_ERROR,
             payload: "Access token has expired"
           });
+          Router.push("/login");
         }
         if (error.code === "AUTHORIZATION_REQUIRED") {
           yield put({
@@ -141,6 +146,7 @@ export default function*({
           type: REQUEST_ERROR,
           payload: "Account has been disabled"
         });
+        Router.push("/login");
       } else {
         yield put({ type: REQUEST_ERROR, payload: error.message || error });
       }

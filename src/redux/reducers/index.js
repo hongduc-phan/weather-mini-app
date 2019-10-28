@@ -1,6 +1,12 @@
-import { combineReducers } from "redux";
-import todos from "./todos";
+import loading, { initialState as initialLoading } from "./loading";
+import weather, { initialState as initialWeather } from "./weather";
 
-export default combineReducers({
-  todos
-});
+export const initialState = {
+  loading: initialLoading,
+  weather: initialWeather
+};
+
+export default {
+  loading,
+  weather
+};

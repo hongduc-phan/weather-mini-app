@@ -1,50 +1,43 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { createLogger } from "redux-logger";
-import { fromJS, Iterable } from "immutable";
-import { combineReducers } from "redux-immutablejs";
 
-import ENV from "src/constants/env";
+// import { fromJS, Iterable } from "immutable";
+import logger from "redux-logger";
+
 import rootReducer, { initialState } from "src/redux/reducers";
-import rootSaga from "src/redux/sagas";
+import rootSaga from "../sagas";
+// import { loadingBarMiddleware } from "react-redux-loading-bar";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const stateTransformer = state => {
-  if (Iterable.isIterable(state)) return state.toJS();
-  return state;
-};
-
-// const logger = createLogger({
-//   stateTransformer,
-//   collapsed: (getState, action, logEntry) => !logEntry.error,
-//   predicate: (getState, action) =>
-//     !["@@redux-form/CHANGE", "@@redux-form/REGISTER_FIELD"].includes(
-//       action.type
-//     )
-// });
+// const bindMiddleware = middleware => {
+//   if (process.env.NODE_ENV !== "production") {
+//     const { composeWithDevTools } = require("redux-devtools-extension");
+//     return composeWithDevTools(applyMiddleware(logger, middleware));
+//   }
+//   return applyMiddleware(...middleware);
+// };
 
 export default (state = initialState) => {
   const composeMiddleware =
-    ENV === "production" || !process.browser
-      ? applyMiddleware(sagaMiddleware)
-      : compose(
+    process.env.NODE_ENV !== "production"
+      ? compose(
           applyMiddleware(sagaMiddleware)
           // applyMiddleware(logger)
-        );
+        )
+      : compose(applyMiddleware(sagaMiddleware));
 
   const store = createStore(
     combineReducers(rootReducer),
-    fromJS(state),
+    state,
     composeMiddleware
+    // bindMiddleware([sagaMiddleware])
   );
-
   store.runSagaTask = () => {
     store.sagaTask = sagaMiddleware.run(rootSaga);
   };
 
   // run the rootSaga initially
   store.runSagaTask();
-
   return store;
 };

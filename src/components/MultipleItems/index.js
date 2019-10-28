@@ -13,31 +13,15 @@ export default class MultipleItems extends Component {
       slidesToScroll: 3,
       accessibility: true
     };
+    const { data = [], city = {}, units = "" } = this.props;
     return (
       <div>
-        <h2> Multiple items </h2>
         <Slider {...settings}>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
-          <div>
-            <Card />
-          </div>
+          {data.map((item, index) => (
+            <div key={index}>
+              <Card item={item} city={city} units={units} />
+            </div>
+          ))}
         </Slider>
       </div>
     );

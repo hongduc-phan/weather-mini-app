@@ -1,17 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore } from "redux";
+// import { createStore } from "redux";
 import { Provider } from "react-redux";
+import "babel-polyfill";
 
-import rootReducer from "./src/redux/reducers";
+import createStore from "src/redux/store";
 
 //page
 import AppContainer from "./src/page/App";
 
-const store = createStore(rootReducer);
+const stores = createStore();
 
 const App = () => (
-  <Provider store={store}>
+  <Provider store={stores}>
     <AppContainer />
   </Provider>
 );
