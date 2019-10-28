@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import forEach from "lodash/forEach";
+import findIndex from "lodash/findIndex";
+import moment from "moment";
 
 //compoent layout
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -76,6 +79,35 @@ class App extends Component {
     });
   };
 
+  filterDay = data => {
+    const outPut = [];
+    let date = "";
+    forEach(data, item => {
+      if (date === "") {
+        date = moment(item.dt_txt).format("MMM Do YY");
+        outPut.push({
+          date,
+          list: [item]
+        });
+      } else if (date === moment(item.dt_txt).format("MMM Do YY")) {
+        const index = findIndex(
+          outPut,
+          o => o.date === moment(item.dt_txt).format("MMM Do YY")
+        );
+        if (index > -1) {
+          outPut[index].list.push(item);
+        }
+      } else if (date !== moment(item.dt_txt).format("MMM Do YY")) {
+        date = moment(item.dt_txt).format("MMM Do YY");
+        outPut.push({
+          date,
+          list: [item]
+        });
+      }
+    });
+    return outPut;
+  };
+
   render() {
     const {
       store: {
@@ -85,7 +117,7 @@ class App extends Component {
       }
     } = this.props;
     const { units, isMetric, loading } = this.state;
-    console.log(data);
+    console.log(this.filterDay(data));
     return (
       <div>
         {loading && <Loading />}
