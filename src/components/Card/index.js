@@ -37,7 +37,7 @@ export default function MediaCard({ item, city, units }) {
         />
         <CardMedia
           className={classes.media}
-          image="/static/images/cards/contemplative-reptile.jpg"
+          // image="/static/images/cards/contemplative-reptile.jpg"
           title="Contemplative Reptile"
         >
           <Typography

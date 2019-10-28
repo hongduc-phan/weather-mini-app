@@ -12,8 +12,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 // import CheckBoxIcon from "@material-ui/icons/CheckBox";
 // import Favorite from "@material-ui/icons/Favorite";
 // import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Fade from "@material-ui/core/Fade";
 //Compoent
 import MultipleItems from "src/components/MultipleItems";
+import Loading from "src/components/Loading";
 
 //redux
 import { connect } from "react-redux";
@@ -52,11 +56,12 @@ class App extends Component {
   }
 
   fetchWeather = units => {
+    this.setState({ loading: true });
     this.props.action.getWeatherRequest(
       {
         q: "Munich",
         APPID: "75f972b80e26f14fe6c920aa6a85ad57",
-        cnt: "5",
+        cnt: "40",
         units
       },
       () => this.setState({ loading: false }),
@@ -79,10 +84,12 @@ class App extends Component {
         }
       }
     } = this.props;
-    const { units, isMetric } = this.state;
+    const { units, isMetric, loading } = this.state;
     console.log(data);
     return (
       <div>
+        {loading && <Loading />}
+
         <CssBaseline />
         <Container>
           <h2> Weather app </h2>
