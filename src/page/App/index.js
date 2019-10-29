@@ -21,6 +21,7 @@ import Fade from "@material-ui/core/Fade";
 //Compoent
 import MultipleItems from "src/components/MultipleItems";
 import Loading from "src/components/Loading";
+import Chart from "src/components/Chart";
 
 //redux
 import { connect } from "react-redux";
@@ -50,7 +51,8 @@ class App extends Component {
   state = {
     loading: false,
     units: "metric",
-    isMetric: true
+    isMetric: true,
+    idx: 0
   };
 
   componentDidMount() {
@@ -87,7 +89,7 @@ class App extends Component {
         date = moment(item.dt_txt).format("MMM Do YY");
         outPut.push({
           date,
-          list: [item]
+          temlist: [item]
         });
       } else if (date === moment(item.dt_txt).format("MMM Do YY")) {
         const index = findIndex(
@@ -95,17 +97,21 @@ class App extends Component {
           o => o.date === moment(item.dt_txt).format("MMM Do YY")
         );
         if (index > -1) {
-          outPut[index].list.push(item);
+          outPut[index].temlist.push(item);
         }
       } else if (date !== moment(item.dt_txt).format("MMM Do YY")) {
         date = moment(item.dt_txt).format("MMM Do YY");
         outPut.push({
           date,
-          list: [item]
+          temlist: [item]
         });
       }
     });
     return outPut;
+  };
+
+  handelSetIndex = index => {
+    this.setState({ idx: index });
   };
 
   render() {
@@ -116,12 +122,11 @@ class App extends Component {
         }
       }
     } = this.props;
-    const { units, isMetric, loading } = this.state;
-    console.log(this.filterDay(data));
+    const { units, isMetric, loading, idx } = this.state;
+    const filterData = data.length > 0 ? this.filterDay(data) : [];
     return (
       <div>
         {loading && <Loading />}
-
         <CssBaseline />
         <Container>
           <h2> Weather app </h2>
@@ -147,7 +152,15 @@ class App extends Component {
               label="Fahrenheit"
             />
           </FormGroup>
-          <MultipleItems data={data} city={city} units={units} />
+          <MultipleItems
+            data={filterData}
+            city={city}
+            units={units}
+            handelSetIndex={this.handelSetIndex}
+          />
+          {filterData.length > 0 && filterData[idx].temlist && (
+            <Chart item={filterData[idx]} />
+          )}
         </Container>
       </div>
     );

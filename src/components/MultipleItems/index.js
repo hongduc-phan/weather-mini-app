@@ -39,13 +39,24 @@ export default class MultipleItems extends Component {
         }
       ]
     };
-    const { data = [], city = {}, units = "" } = this.props;
+    const {
+      data = [],
+      city = {},
+      units = "",
+      handelSetIndex = () => {}
+    } = this.props;
     return (
       <div>
         <Slider {...settings}>
           {data.map((item, index) => (
             <div key={index}>
-              <Card item={item} city={city} units={units} />
+              <Card
+                index={index}
+                item={item}
+                city={city}
+                units={units}
+                handelSetIndex={handelSetIndex}
+              />
             </div>
           ))}
         </Slider>

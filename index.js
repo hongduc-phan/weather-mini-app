@@ -9,6 +9,8 @@ import createStore from "src/redux/store";
 //page
 import AppContainer from "./src/page/App";
 
+import "./style.css";
+
 const stores = createStore();
 
 const App = () => (
